@@ -11,7 +11,7 @@ echo "=== Phase 1: Data Cleaning ==="
 hadoop jar $HADOOP_STREAMING \
     -D mapreduce.job.name="SocialMedia_Cleaning" \
     -input /input/social_media_logs.txt \
-    -output /output/cleaned \
+    -output /output/ \
     -mapper "python3 src/cleaner/cleaner_mapper.py" \
     -reducer "python3 src/cleaner/cleaner_reducer.py" \
     -file src/cleaner/cleaner_mapper.py \
@@ -28,7 +28,7 @@ hadoop jar $HADOOP_STREAMING \
     -D stream.num.map.output.key.fields=2 \
     -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner \
     -input /output/cleaned \
-    -output /output/actions \
+    -output /output/ \
     -mapper "python3 src/actions/actions_mapper.py" \
     -reducer "python3 src/actions/actions_reducer.py" \
     -file src/actions/actions_mapper.py \
@@ -40,7 +40,7 @@ hadoop jar $HADOOP_STREAMING \
     -D mapreduce.job.name="SocialMedia_Trending" \
     -cacheFile /config/threshold.txt#threshold.txt \
     -input /output/cleaned \
-    -output /output/trending \
+    -output /output/ \
     -mapper "python3 src/trending/trending_mapper.py" \
     -reducer "python3 src/trending/trending_reducer.py" \
     -file src/trending/trending_mapper.py \
@@ -53,7 +53,7 @@ hadoop jar $HADOOP_STREAMING \
     -D mapreduce.reduce.memory.mb=12288 \
     -input /output/actions \
     -input /input/user_profiles.txt \
-    -output /output/final \
+    -output /output/ \
     -mapper "python3 src/join/join_mapper.py" \
     -reducer "python3 src/join/join_reducer.py" \
     -file src/join/join_mapper.py \
