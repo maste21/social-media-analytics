@@ -92,7 +92,6 @@ Input Path Errors: Verify paths in run_pipeline.sh
 
 Permission Denied: Run chmod +x *.sh
 
-Missing Dependencies: Install with pip install -r requirements.txt
 
 
 
