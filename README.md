@@ -1,47 +1,104 @@
-social-media-analytics/  
-├── config/  
-│   ├── cluster.properties      # Cluster configuration settings  
-│   ├── hot_content.txt         # Hot content thresholds/rules  
-│   └── threshold.txt           # Threshold configurations  
-│  
-├── docs/  
-│   └── join_strategy.md        # Documentation on data joining strategies  
-│  
-├── input/  
-│   ├── social_media_logs.txt   # Raw social media log data  
-│   └── user_profiles.txt       # User profile data  
-│  
-├── output/                     # Processed/generated outputs  
-│  
-├── scripts/  
-│   ├── partitioner.sh          # Script for data partitioning  
-│   └── threshold_calculator.sh # Script for threshold calculations  
-│  
-├── src/  
-│   ├── actions/                # User action processing  
-│   │   ├── actions_combiner.py # Combines mapped actions  
-│   │   ├── actions_mapper.py   # Maps user actions  
-│   │   └── actions_reducer.py  # Reduces action data  
-│   │  
-│   ├── cleaner/                # Data cleaning/transformation  
-│   │   ├── cleaner_mapper.py   # Maps raw data for cleaning  
-│   │   └── cleaner_reducer.py  # Reduces cleaned data  
-│   │  
-│   ├── common/                 # Shared utilities  
-│   │   └── utils.py            # Helper functions (e.g., I/O, logging)  
-│   │  
-│   ├── join/                   # Data joining operations  
-│   │   ├── join_mapper.py      # Maps data for joins  
-│   │   └── join_reducer.py     # Reduces joined datasets  
-│   │  
-│   ├── threshold/              # Threshold-based filtering  
-│   │   ├── threshold_mapper.py # Maps threshold checks  
-│   │   └── threshold_reducer.py# Aggregates threshold results  
-│   │  
-│   └── trending/               # Trending content analysis  
-│       ├── trending_mapper.py  # Maps content for trend detection  
-│       └── trending_reducer.py # Reduces trending results  
-│  
-├── run_pipeline.sh             # Main pipeline execution script  
-├── threshold_mapper.py         # (Global) MapReduce mapper for thresholds  
-└── threshold_reducer.py        # (Global) MapReduce reducer for thresholds  
+<img width="401" alt="image" src="https://github.com/user-attachments/assets/ed6450c6-1280-4738-b26f-90c00364d7ee" />
+
+
+1. **Data Ingestion**: Raw logs (`social_media_logs.txt`) and profiles (`user_profiles.txt`)  
+2. **Processing**:  
+   - Data validation & cleansing  
+   - User action aggregation  
+   - Trending content identification  
+   - Dataset joining  
+3. **Output**: final reports 
+
+## Quick Start
+
+### Prerequisites
+- Hadoop/Spark cluster or local MapReduce simulator
+- Python 3.6+
+- Bash shell
+
+### Execution
+1. **Configure cluster settings**:
+   ```bash
+   nano config/cluster.properties
+Run the full pipeline:
+
+bash
+./run_pipeline.sh --input data/ --output output/
+
+**Key Components**
+**1. Data Cleansing**
+
+Input: social_media_logs.txt
+
+Output: Validated records in output/cleansed_data
+
+Files:
+
+src/cleaner/cleaner_mapper.py: Filters malformed records
+
+src/cleaner/cleaner_reducer.py: Structures valid data
+
+**2. Action Aggregation**
+
+Metrics: Counts posts/likes/shares per user
+
+Sorting: Descending by engagement
+
+Files:
+
+src/actions/actions_mapper.py: Counts actions
+
+src/actions/actions_reducer.py: Ranks users
+
+**3. Trending Detection**
+
+Threshold: Configurable in config/hot_content.txt
+
+Files:
+
+src/trending/trending_mapper.py: Calculates engagement
+
+src/trending/trending_reducer.py: Filters trending items
+
+**4. Dataset Joining**
+
+Strategy: Reduce-side join (documented in docs/join_strategy.md)
+
+Files:
+
+src/join/join_mapper.py: Tags records for joining
+
+src/join/join_reducer.py: Merges datasets
+
+Optimization Features
+Data Skew Handling:
+
+scripts/threshold_calculator.sh dynamically adjusts thresholds
+
+src/join/join_reducer.py implements skew-resistant joins
+
+**Performance:**
+
+In-mapper combining in all mappers
+
+Secondary sorting in reducers
+
+
+**Troubleshooting**
+
+**Common Issues:**
+
+Input Path Errors: Verify paths in run_pipeline.sh
+
+Permission Denied: Run chmod +x *.sh
+
+Missing Dependencies: Install with pip install -r requirements.txt
+
+
+
+### Key Features:
+1. **Structure-First Approach**: Mirrors your actual repository layout
+2. **MapReduce Focus**: Highlights the mapper/reducer pattern
+3. **Cluster-Ready**: Includes Hadoop/Spark configuration notes
+4. **Modular Documentation**: Links to component-specific docs
+
